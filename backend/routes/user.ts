@@ -121,13 +121,16 @@ router.post("/signin", async (req, res) => {
     username: req.body.username,
   });
 
+  console.log(user);
   if (!user) {
     return res.status(411).json({
       message: "Error while logging in",
     });
   }
 
-  const userValidation = await user.__v.validatePassword(req.body.password);
+  const userValidation = await bcrypt.compare(req.body.password, user.password);
+
+  console.log(userValidation);
 
   if (!userValidation) {
     return res.status(411).json({
